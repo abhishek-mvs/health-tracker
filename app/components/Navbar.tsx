@@ -12,6 +12,7 @@ export default function Navbar() {
   const supabase = createClient();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   useEffect(() => {
     async function checkAuth() {
@@ -33,6 +34,7 @@ export default function Navbar() {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setIsLoggedIn(!!session);
+        setUserEmail(session?.user?.email || null);
       }
     );
 
@@ -57,11 +59,11 @@ export default function Navbar() {
   return (
     <nav className="bg-white/90 shadow-lg rounded-xl p-4 mb-6 backdrop-blur-sm">
       <div className="container mx-auto flex justify-between items-center">
-        <Link href={isLoggedIn ? "/dashboard/groups" : "/"} className="text-xl font-bold text-purple-900 flex items-center transition-all hover:text-purple-800">
-          <span >
+        <Link href={isLoggedIn ? "/dashboard/groups" : "/"} className="text-xl font-bold text-purple-900 flex items-center gap-2 transition-all hover:text-purple-800">
+          <span className="inline-flex items-center justify-center transform transition-transform duration-300 hover:scale-110">
             <ChartSplineIcon className="w-14 h-14" />
           </span>
-          <span className="relative top-0.5"> Health Tracker</span>
+          <span className="relative top-0.5">Health Tracker</span>
         </Link>
 
         <div className="flex items-center space-x-6">
@@ -83,7 +85,7 @@ export default function Navbar() {
                 href="/dashboard/profile"
                 className={`${pathname.includes('/dashboard/profile') ? 'text-rose-500 font-bold' : 'text-purple-800 hover:text-rose-400'} transition-colors`}
               >
-                Profile
+                {userEmail || 'Profile'}
               </Link>
               <button
                 onClick={handleLogout}
