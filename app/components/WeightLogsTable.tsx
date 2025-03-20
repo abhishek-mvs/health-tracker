@@ -9,7 +9,7 @@ type WeightLog = {
   id: string;
   user_id: string;
   status: number;
-  created_at: string;
+  log_date: string;
 };
 
 export default function WeightLogsTable({ weightLogs }: { weightLogs: WeightLog[] }) {
@@ -76,7 +76,7 @@ export default function WeightLogsTable({ weightLogs }: { weightLogs: WeightLog[
                     </button>
                   </td>
                   <td className="py-2 text-purple-800">
-                    {new Date(log.created_at).toLocaleDateString()}
+                    {new Date(log.log_date).toLocaleDateString()}
                   </td>
                   <td className="text-right py-2 text-purple-800">{log.status}</td>
                 </tr>

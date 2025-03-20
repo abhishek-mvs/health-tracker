@@ -59,14 +59,14 @@ export default async function GroupDetailsPage(props: any) {
     .from('userWeightLog')
     .select('*')
     .in('user_id', memberIds)
-    .order('created_at', { ascending: true });
-
+    .order('log_date', { ascending: true });
+  console.log("weightLogs", weightLogs);
   // Get member profiles
   const { data: profiles } = await supabase
     .from('profile')
     .select('*')
     .in('id', memberIds);
-
+  console.log("profiles", profiles);
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="md:col-span-1">

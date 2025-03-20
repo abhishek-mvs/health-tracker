@@ -10,8 +10,10 @@ import {
   Title,
   Tooltip,
   Legend,
+  TimeScale,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import 'chartjs-adapter-date-fns'; // Import date adapter for time scale
 
 ChartJS.register(
   CategoryScale,
@@ -20,14 +22,15 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  TimeScale // Register TimeScale
 );
 
 type WeightLog = {
   id: string;
   user_id: string;
   status: number;
-  created_at: string;
+  log_date: string;
 };
 
 type Profile = {
@@ -61,20 +64,15 @@ export default function WeightGraph({ weightLogs, profiles }: WeightGraphProps) 
     // Sort logs by date for each user
     Object.keys(userLogs).forEach(userId => {
       userLogs[userId].sort((a, b) =>
-        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        new Date(a.log_date).getTime() - new Date(b.log_date).getTime()
       );
     });
 
-    // Get all unique dates
-    const allDates = Array.from(new Set(weightLogs.map(log =>
-      new Date(log.created_at).toLocaleDateString()
-    ))).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
-
-    // Create datasets for each user
+    // Create datasets for each user with their own dates
     const datasets = Object.keys(userLogs).map((userId, index) => {
       const profile = profiles.find(p => p.id === userId);
       const userName = profile ? profile.full_name : `User ${index + 1}`;
-
+      
       // Generate a color based on index with improved aesthetics
       const hue = (index * 137.5) % 360; // Golden angle for better distribution
       const saturation = 75 + (index % 3) * 5; // Slight variation in saturation
@@ -83,7 +81,15 @@ export default function WeightGraph({ weightLogs, profiles }: WeightGraphProps) 
 
       return {
         label: userName,
-        data: userLogs[userId].map(log => log.status),
+        data: userLogs[userId].map((log) => {
+          // Create date without time component
+          const dateStr = log.log_date.split('T')[0];
+          return {
+            x: new Date(dateStr),
+            y: log.status,
+            originalDate: log.log_date // Store original date for tooltip
+          };
+        }),
         borderColor: color,
         backgroundColor: `${color}20`, // More subtle transparency
         borderWidth: 2.5, // Slightly thicker line for visibility
@@ -96,6 +102,12 @@ export default function WeightGraph({ weightLogs, profiles }: WeightGraphProps) 
         pointHitRadius: 10, // Easier to hover
       };
     });
+
+    // Get all unique dates for x-axis (without time component)
+    const allDates = Array.from(new Set(weightLogs.map(log => {
+      const dateStr = log.log_date.split('T')[0];
+      return new Date(dateStr);
+    }))).sort((a, b) => a.getTime() - b.getTime());
 
     setChartData({
       labels: allDates,
@@ -136,8 +148,34 @@ export default function WeightGraph({ weightLogs, profiles }: WeightGraphProps) 
         padding: 12,
         cornerRadius: 6,
         callbacks: {
+          title: function(tooltipItems: any) {
+            // Get the actual data point that includes our originalDate
+            const dataPoint = tooltipItems[0].dataset.data[tooltipItems[0].dataIndex];
+            
+            // Use the original log_date for more accurate display
+            if (dataPoint && dataPoint.originalDate) {
+              const date = new Date(dataPoint.originalDate);
+              return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+              });
+            }
+            
+            // Fallback to parsed x value if originalDate is not available
+            const date = new Date(tooltipItems[0].parsed.x);
+            return date.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric'
+            });
+          },
           label: function (context: any) {
             return `${context.dataset.label}: ${context.parsed.y.toFixed(1)} kg`;
+          },
+          // Filter out items that don't have data at this exact point
+          filter: function(tooltipItem: any) {
+            return tooltipItem.raw !== null && tooltipItem.raw !== undefined;
           }
         }
       }
@@ -163,6 +201,14 @@ export default function WeightGraph({ weightLogs, profiles }: WeightGraphProps) 
         }
       },
       x: {
+        type: 'time',
+        time: {
+          unit: 'day',
+          displayFormats: {
+            day: 'MMM d'
+          },
+          tooltipFormat: 'MMM d, yyyy' // Format for tooltip
+        },
         title: {
           display: true,
           text: 'Date',
@@ -182,8 +228,8 @@ export default function WeightGraph({ weightLogs, profiles }: WeightGraphProps) 
       },
     },
     interaction: {
-      mode: 'index' as const,
-      intersect: false,
+      mode: 'nearest' as const,  // Change from 'index' to 'nearest'
+      intersect: true,           // Change to true to only show data when hovering near a point
     },
     animation: {
       duration: 1000,

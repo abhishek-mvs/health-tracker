@@ -75,8 +75,9 @@ export default function WeightEntryForm({ userId }: { userId: string }) {
         .insert({
           user_id: userId,
           status: parseFloat(weight),
-          created_at: date.toISOString(),
-          updated_at: new Date().toISOString()
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          log_date: date.toISOString(),
         });
 
       if (error) throw error;

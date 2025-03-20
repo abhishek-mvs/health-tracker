@@ -31,7 +31,7 @@ export default async function GroupsPage() {
     .from('userWeightLog')
     .select('*')
     .eq('user_id', user?.id)
-    .order('created_at', { ascending: false })
+    .order('log_date', { ascending: false })
     .limit(10);
 
 
