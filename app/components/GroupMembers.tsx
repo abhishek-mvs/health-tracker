@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -21,6 +21,7 @@ export default function GroupMembers({ members, isOwner, groupId }: GroupMembers
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState('');
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const router = useRouter();
   const supabase = createClient();
   
@@ -32,8 +33,20 @@ export default function GroupMembers({ members, isOwner, groupId }: GroupMembers
     currentPage * membersPerPage
   );
 
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setCurrentUserId(session.user.id);
+      }
+    };
+
+    getCurrentUser();
+  }, [supabase]);
+
   const handleRemoveMember = async (memberId: string) => {
     if (!isOwner) return;
+    if (memberId === currentUserId) return; // Prevent removing yourself
     
     setLoading(memberId);
     setError('');
@@ -86,18 +99,25 @@ export default function GroupMembers({ members, isOwner, groupId }: GroupMembers
                         {member.full_name.charAt(0)}
                       </div>
                     )}
-                    <span>{member.full_name}</span>
+                    <span>
+                      {member.full_name}
+                      {member.id === currentUserId && (
+                        <span className="ml-2 text-green-400 font-medium">(YOU)</span>
+                      )}
+                    </span>
                   </div>
                 </td>
                 {isOwner && (
                   <td className="text-right py-3">
-                    <button
-                      onClick={() => handleRemoveMember(member.id)}
-                      disabled={loading === member.id}
-                      className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded"
-                    >
-                      {loading === member.id ? 'Removing...' : 'Remove'}
-                    </button>
+                    {member.id !== currentUserId ? (
+                      <button
+                        onClick={() => handleRemoveMember(member.id)}
+                        disabled={loading === member.id}
+                        className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded"
+                      >
+                        {loading === member.id ? 'Removing...' : 'Remove'}
+                      </button>
+                    ) : null}
                   </td>
                 )}
               </tr>

@@ -3,11 +3,24 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from "@/utils/supabase/client";
+import { useEffect, useState } from 'react';
 
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getUserEmail = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setUserEmail(session.user.email || null);
+      }
+    };
+
+    getUserEmail();
+  }, [supabase]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -32,7 +45,7 @@ export default function Navbar() {
             href="/dashboard/profile" 
             className={`${pathname.includes('/dashboard/profile') ? 'text-green-400 font-bold' : ''}`}
           >
-            Profile
+            {userEmail || 'Profile'}
           </Link>
           <button 
             onClick={handleLogout}
