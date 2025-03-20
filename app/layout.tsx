@@ -1,6 +1,7 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
 import { Providers } from './providers';
+import Navbar from './components/Navbar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,8 +17,31 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-gradient-to-br from-black to-green-900 min-h-screen text-white`}>
-        <Providers>{children}</Providers>
+      <body className={`${inter.className} min-h-screen text-purple-900 overflow-x-hidden bg-gray-100`}>
+        {/* Background Elements */}
+        <div className="fixed inset-0 z-0">
+          {/* Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-100 to-gray-100"></div>
+
+          {/* Grid Pattern */}
+          <div className="absolute inset-0 bg-white/50 bg-[linear-gradient(to_right,#9f5f9120_1px,transparent_1px),linear-gradient(to_bottom,#9f5f9120_1px,transparent_1px)] bg-[size:14px_24px]"></div>
+
+          {/* Radial Glow */}
+          <div className="absolute top-0 left-0 w-full h-[100vh] bg-[radial-gradient(circle_600px_at_50%_25%,#9f5f9115,transparent)]"></div>
+        </div>
+
+        {/* DatePicker Portal */}
+        <div id="datepicker-portal" className="z-50"></div>
+
+        {/* Content */}
+        <div className="relative z-10 min-h-screen">
+          <Providers>
+            <div className="container mx-auto px-4 py-4">
+              <Navbar />
+              {children}
+            </div>
+          </Providers>
+        </div>
       </body>
     </html>
   );

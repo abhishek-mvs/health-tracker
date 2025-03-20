@@ -57,39 +57,39 @@ export default function CreateGroupPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto glass p-6 rounded-lg">
-      <h1 className="text-2xl font-bold mb-6">Create a New Group</h1>
-      
+    <div className="max-w-md mx-auto bg-white/90 shadow-lg rounded-xl p-6 backdrop-blur-sm">
+      <h1 className="text-2xl font-bold mb-6 text-purple-900">Create a New Group</h1>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block mb-2">Group Name</label>
+          <label className="block mb-2 text-purple-800">Group Name</label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-            className="w-full p-2 rounded bg-black bg-opacity-50 border border-gray-600 focus:border-green-500 focus:outline-none"
+            className="w-full p-2 rounded-lg bg-white/80 border border-purple-200 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-200 text-purple-900"
             placeholder="Enter a name for your group"
           />
         </div>
-        
+
         <div>
-          <label className="block mb-2">Description (optional)</label>
+          <label className="block mb-2 text-purple-800">Description (optional)</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={4}
-            className="w-full p-2 rounded bg-black bg-opacity-50 border border-gray-600 focus:border-green-500 focus:outline-none"
+            className="w-full p-2 rounded-lg bg-white/80 border border-purple-200 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-200 text-purple-900"
             placeholder="Describe the purpose of your group"
           />
         </div>
-        
-        {error && <p className="text-red-400">{error}</p>}
-        
+
+        {error && <p className="text-rose-500 bg-rose-100 p-2 rounded-lg">{error}</p>}
+
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-green-600 hover:bg-green-700 py-2 rounded transition-colors"
+          className="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded-lg text-white shadow-md transition-all hover:shadow-lg"
         >
           {loading ? 'Creating...' : 'Create Group'}
         </button>

@@ -16,7 +16,7 @@ export default async function SignUp(props: any) {
     const fullName = formData.get("fullName") as string;
     const height = formData.get("height") as string;
     const weight = formData.get("weight") as string;
-    
+
     const supabase = await createClient();
 
     const { data, error } = await supabase.auth.signUp({
@@ -53,59 +53,59 @@ export default async function SignUp(props: any) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-green-900 to-black">
-      <div className="glass p-8 w-full max-w-md rounded-xl shadow-2xl backdrop-blur-lg">
-        <h1 className="text-3xl font-bold text-center mb-6">Create Account</h1>
-        <p className="text-center text-gray-300 mb-8">Join the weight loss community</p>
-        
+    <div className="min-h-[calc(100vh-160px)] flex flex-col items-center justify-center py-8">
+      <div className="bg-white/90 shadow-lg rounded-xl p-8 w-full max-w-md backdrop-blur-sm">
+        <h1 className="text-3xl font-bold text-center mb-6 text-purple-900">Create Account</h1>
+        <p className="text-center text-purple-700 mb-8">Join the weight loss community</p>
+
         <form
           className="flex flex-col gap-4"
           action={signUp}
         >
           <div className="space-y-2">
-            <label className="text-md font-medium" htmlFor="email">
+            <label className="text-md font-medium text-purple-800" htmlFor="email">
               Email
             </label>
             <input
-              className="w-full rounded-md px-4 py-3 bg-black bg-opacity-50 border border-gray-600 focus:border-green-500 focus:outline-none"
+              className="w-full rounded-md px-4 py-3 bg-purple-50 border border-purple-200 focus:border-purple-500 focus:outline-none text-purple-900"
               name="email"
               placeholder="you@example.com"
               required
             />
           </div>
-          
+
           <div className="space-y-2">
-            <label className="text-md font-medium" htmlFor="password">
+            <label className="text-md font-medium text-purple-800" htmlFor="password">
               Password
             </label>
             <input
-              className="w-full rounded-md px-4 py-3 bg-black bg-opacity-50 border border-gray-600 focus:border-green-500 focus:outline-none"
+              className="w-full rounded-md px-4 py-3 bg-purple-50 border border-purple-200 focus:border-purple-500 focus:outline-none text-purple-900"
               type="password"
               name="password"
               placeholder="••••••••"
               required
             />
           </div>
-          
+
           <div className="space-y-2">
-            <label className="text-md font-medium" htmlFor="fullName">
+            <label className="text-md font-medium text-purple-800" htmlFor="fullName">
               Full Name
             </label>
             <input
-              className="w-full rounded-md px-4 py-3 bg-black bg-opacity-50 border border-gray-600 focus:border-green-500 focus:outline-none"
+              className="w-full rounded-md px-4 py-3 bg-purple-50 border border-purple-200 focus:border-purple-500 focus:outline-none text-purple-900"
               name="fullName"
               placeholder="John Doe"
               required
             />
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-md font-medium" htmlFor="height">
+              <label className="text-md font-medium text-purple-800" htmlFor="height">
                 Height (cm)
               </label>
               <input
-                className="w-full rounded-md px-4 py-3 bg-black bg-opacity-50 border border-gray-600 focus:border-green-500 focus:outline-none"
+                className="w-full rounded-md px-4 py-3 bg-purple-50 border border-purple-200 focus:border-purple-500 focus:outline-none text-purple-900"
                 type="number"
                 step="0.1"
                 name="height"
@@ -113,13 +113,13 @@ export default async function SignUp(props: any) {
                 required
               />
             </div>
-            
+
             <div className="space-y-2">
-              <label className="text-md font-medium" htmlFor="weight">
+              <label className="text-md font-medium text-purple-800" htmlFor="weight">
                 Weight (kg)
               </label>
               <input
-                className="w-full rounded-md px-4 py-3 bg-black bg-opacity-50 border border-gray-600 focus:border-green-500 focus:outline-none"
+                className="w-full rounded-md px-4 py-3 bg-purple-50 border border-purple-200 focus:border-purple-500 focus:outline-none text-purple-900"
                 type="number"
                 step="0.1"
                 name="weight"
@@ -128,37 +128,31 @@ export default async function SignUp(props: any) {
               />
             </div>
           </div>
-          
+
           <div className="pt-4">
             <SubmitButton
               formAction={signUp}
-              className="w-full bg-green-600 hover:bg-green-700 rounded-md px-4 py-3 text-white font-medium transition-colors"
+              className="w-full bg-purple-600 hover:bg-purple-700 rounded-md px-4 py-3 text-white font-medium transition-colors shadow-md"
               pendingText="Creating Account..."
             >
               Sign Up
             </SubmitButton>
           </div>
-          
+
           {message && (
-            <div className="mt-4 p-4 bg-gray-800 rounded-md text-center">
+            <div className="mt-4 p-4 bg-yellow-100 text-purple-900 rounded-md text-center border border-yellow-200">
               {message}
             </div>
           )}
         </form>
-        
+
         <div className="mt-6 text-center">
-          <p className="text-gray-400 mb-2">
+          <p className="text-purple-700">
             Already have an account?{" "}
-            <Link href="/sign-in" className="text-green-400 hover:text-green-300">
+            <Link href="/sign-in" className="text-rose-500 hover:text-rose-600">
               Sign In
             </Link>
           </p>
-          <Link
-            href="/"
-            className="text-green-400 hover:text-green-300 transition-colors"
-          >
-            ← Back to Home
-          </Link>
         </div>
       </div>
     </div>

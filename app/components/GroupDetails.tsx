@@ -65,14 +65,14 @@ export default function GroupDetails({ group, isOwner, memberCount }: GroupDetai
         .eq('group_id', group.id);
       console.log("members", members);
 
-  
+
       const { error: membersError } = await supabase
         .from('groupMembers')
         .delete()
         .eq('group_id', group.id);
       console.log("membersError", membersError);
       if (membersError) throw membersError;
-      
+
       // Then delete the group
       console.log("deleting group", group.id);
       const { error: groupError } = await supabase
@@ -104,58 +104,58 @@ export default function GroupDetails({ group, isOwner, memberCount }: GroupDetai
   };
 
   return (
-    <div className="glass p-6 h-full">
-      <h1 className="text-2xl font-bold mb-2">{group.title}</h1>
-      <p className="text-gray-300 mb-6">{group.description || 'No description'}</p>
-      
+    <div className="bg-white/90 shadow-lg rounded-xl p-6 backdrop-blur-sm h-full">
+      <h1 className="text-2xl font-bold mb-2 text-purple-900">{group.title}</h1>
+      <p className="text-purple-800 mb-6">{group.description || 'No description'}</p>
+
       <div className="space-y-4">
         <div>
-          <h3 className="text-lg font-semibold mb-1">Invite Link</h3>
-          <button 
+          <h3 className="text-lg font-semibold mb-1 text-purple-900">Invite Link</h3>
+          <button
             onClick={copyJoinLink}
-            className="w-full bg-green-600 hover:bg-green-700 py-2 rounded flex items-center justify-center"
+            className="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded-lg text-white shadow-md transition-all hover:shadow-lg flex items-center justify-center"
           >
             <span className="mr-2">Copy Invite Link</span> 🔗
           </button>
-          <p className="text-sm mt-1">Share this link for one-click joining</p>
+          <p className="text-sm mt-1 text-purple-700">Share this link for one-click joining</p>
         </div>
-        
+
         <div>
-          <h3 className="text-lg font-semibold mb-1">Members</h3>
-          <p>{memberCount} member{memberCount !== 1 ? 's' : ''}</p>
+          <h3 className="text-lg font-semibold mb-1 text-purple-900">Members</h3>
+          <p className="text-purple-800">{memberCount} member{memberCount !== 1 ? 's' : ''}</p>
         </div>
-        
-        {error && <p className="text-red-400">{error}</p>}
-        
-        <div className="pt-4 border-t border-gray-700">
+
+        {error && <p className="text-rose-500 bg-rose-100 p-2 rounded-lg">{error}</p>}
+
+        <div className="pt-4 border-t border-purple-200">
           {isOwner ? (
             <>
               {!showDeleteConfirm ? (
                 <button
                   onClick={() => setShowDeleteConfirm(true)}
-                  className="w-full bg-red-600 hover:bg-red-700 py-2 rounded"
+                  className="w-full bg-rose-400 hover:bg-rose-500 py-2 rounded-lg text-white shadow-md transition-all hover:shadow-lg"
                   disabled={loading}
                 >
                   Delete Group
                 </button>
               ) : (
                 <div className="space-y-2">
-                  <p className="text-red-400">
-                    {memberCount > 1 
-                      ? 'Cannot delete group with active members' 
+                  <p className="text-rose-500 bg-rose-100 p-2 rounded-lg">
+                    {memberCount > 1
+                      ? 'Cannot delete group with active members'
                       : 'Are you sure you want to delete this group? This action cannot be undone.'}
                   </p>
                   <div className="flex space-x-2">
                     <button
                       onClick={handleDeleteGroup}
-                      className="flex-1 bg-red-600 hover:bg-red-700 py-2 rounded"
+                      className="flex-1 bg-rose-400 hover:bg-rose-500 py-2 rounded-lg text-white shadow-md transition-all hover:shadow-lg"
                       disabled={loading || memberCount > 1}
                     >
                       {loading ? 'Deleting...' : 'Confirm Delete'}
                     </button>
                     <button
                       onClick={() => setShowDeleteConfirm(false)}
-                      className="flex-1 bg-gray-600 hover:bg-gray-700 py-2 rounded"
+                      className="flex-1 bg-purple-200 hover:bg-purple-300 py-2 rounded-lg text-purple-800 shadow-md transition-all hover:shadow-lg"
                       disabled={loading}
                     >
                       Cancel
@@ -167,7 +167,7 @@ export default function GroupDetails({ group, isOwner, memberCount }: GroupDetai
           ) : (
             <button
               onClick={handleLeaveGroup}
-              className="w-full bg-red-600 hover:bg-red-700 py-2 rounded"
+              className="w-full bg-rose-400 hover:bg-rose-500 py-2 rounded-lg text-white shadow-md transition-all hover:shadow-lg"
               disabled={loading}
             >
               {loading ? 'Leaving...' : 'Leave Group'}

@@ -60,13 +60,13 @@ export default function WeightGraph({ weightLogs, profiles }: WeightGraphProps) 
 
     // Sort logs by date for each user
     Object.keys(userLogs).forEach(userId => {
-      userLogs[userId].sort((a, b) => 
+      userLogs[userId].sort((a, b) =>
         new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
       );
     });
 
     // Get all unique dates
-    const allDates = Array.from(new Set(weightLogs.map(log => 
+    const allDates = Array.from(new Set(weightLogs.map(log =>
       new Date(log.created_at).toLocaleDateString()
     ))).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
@@ -74,22 +74,22 @@ export default function WeightGraph({ weightLogs, profiles }: WeightGraphProps) 
     const datasets = Object.keys(userLogs).map((userId, index) => {
       const profile = profiles.find(p => p.id === userId);
       const userName = profile ? profile.full_name : `User ${index + 1}`;
-      
+
       // Generate a color based on index with improved aesthetics
       const hue = (index * 137.5) % 360; // Golden angle for better distribution
       const saturation = 75 + (index % 3) * 5; // Slight variation in saturation
-      const lightness = 55 + (index % 4) * 3; // Slight variation in lightness
+      const lightness = 45 + (index % 4) * 3; // Darker for better visibility on light backgrounds
       const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-      
+
       return {
         label: userName,
         data: userLogs[userId].map(log => log.status),
         borderColor: color,
         backgroundColor: `${color}20`, // More subtle transparency
-        borderWidth: 2,
+        borderWidth: 2.5, // Slightly thicker line for visibility
         tension: 0.4, // Smoother curves
-        pointRadius: 4,
-        pointHoverRadius: 7,
+        pointRadius: 5, // Slightly larger points
+        pointHoverRadius: 8,
         pointBackgroundColor: color,
         pointBorderColor: '#fff',
         pointBorderWidth: 1.5,
@@ -117,14 +117,15 @@ export default function WeightGraph({ weightLogs, profiles }: WeightGraphProps) 
           font: {
             size: 12,
             weight: '600' as const,
-          }
+          },
+          color: '#581c87' // Purple 900 for better visibility
         }
       },
       title: {
         display: false,
       },
       tooltip: {
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        backgroundColor: 'rgba(88, 28, 135, 0.8)', // Purple background
         titleFont: {
           size: 14,
           weight: 'bold' as const,
@@ -135,7 +136,7 @@ export default function WeightGraph({ weightLogs, profiles }: WeightGraphProps) 
         padding: 12,
         cornerRadius: 6,
         callbacks: {
-          label: function(context: any) {
+          label: function (context: any) {
             return `${context.dataset.label}: ${context.parsed.y.toFixed(1)} kg`;
           }
         }
@@ -150,13 +151,15 @@ export default function WeightGraph({ weightLogs, profiles }: WeightGraphProps) 
             size: 14,
             weight: 'bold' as const,
           },
+          color: '#581c87', // Purple 900
           padding: { bottom: 10 }
         },
         grid: {
-          color: 'rgba(255, 255, 255, 0.1)',
+          color: 'rgba(147, 51, 234, 0.15)', // Purple 600 with transparency
         },
         ticks: {
           precision: 1,
+          color: '#7e22ce' // Purple 700
         }
       },
       x: {
@@ -167,10 +170,14 @@ export default function WeightGraph({ weightLogs, profiles }: WeightGraphProps) 
             size: 14,
             weight: 'bold' as const,
           },
+          color: '#581c87', // Purple 900
           padding: { top: 10 }
         },
         grid: {
-          color: 'rgba(255, 255, 255, 0.05)',
+          color: 'rgba(147, 51, 234, 0.1)', // Purple 600 with transparency
+        },
+        ticks: {
+          color: '#7e22ce' // Purple 700
         }
       },
     },
@@ -186,14 +193,14 @@ export default function WeightGraph({ weightLogs, profiles }: WeightGraphProps) 
 
   if (!weightLogs.length) {
     return (
-      <div className="flex items-center justify-center h-80 bg-black bg-opacity-20 rounded-lg border border-gray-700">
-        <p className="text-gray-300 text-lg font-medium">No weight data available for the group members.</p>
+      <div className="flex items-center justify-center h-80 bg-transparent">
+        <p className="text-purple-800 text-lg font-medium">No weight data available for the group members.</p>
       </div>
     );
   }
 
   return (
-    <div className="h-80 p-2 bg-black bg-opacity-10 rounded-lg border border-gray-800 shadow-inner">
+    <div className="h-80 p-4 rounded-lg shadow-inner bg-transparent">
       <Line data={chartData} options={options as any} />
     </div>
   );

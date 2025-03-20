@@ -45,7 +45,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
       let { error } = await supabase.from('profile').upsert(updates);
 
       if (error) throw error;
-      
+
       setMessage('Profile updated successfully!');
       router.refresh();
     } catch (error: any) {
@@ -59,60 +59,60 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block mb-2">Full Name</label>
+        <label className="block mb-2 text-purple-800">Full Name</label>
         <input
           type="text"
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
           required
-          className="w-full p-2 rounded bg-black bg-opacity-50 border border-gray-600"
+          className="w-full p-2 rounded-lg bg-white/80 border border-purple-200 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-200 text-purple-900"
         />
       </div>
-      
+
       <div>
-        <label className="block mb-2">Height (cm)</label>
+        <label className="block mb-2 text-purple-800">Height (cm)</label>
         <input
           type="number"
           step="0.1"
           value={height}
           onChange={(e) => setHeight(e.target.value)}
           required
-          className="w-full p-2 rounded bg-black bg-opacity-50 border border-gray-600"
+          className="w-full p-2 rounded-lg bg-white/80 border border-purple-200 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-200 text-purple-900"
         />
       </div>
-      
+
       <div>
-        <label className="block mb-2">Weight (kg)</label>
+        <label className="block mb-2 text-purple-800">Weight (kg)</label>
         <input
           type="number"
           step="0.1"
           value={weight}
           onChange={(e) => setWeight(e.target.value)}
           required
-          className="w-full p-2 rounded bg-black bg-opacity-50 border border-gray-600"
+          className="w-full p-2 rounded-lg bg-white/80 border border-purple-200 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-200 text-purple-900"
         />
       </div>
-      
+
       <div>
-        <label className="block mb-2">Avatar URL (optional)</label>
+        <label className="block mb-2 text-purple-800">Avatar URL (optional)</label>
         <input
           type="url"
           value={avatarUrl || ''}
           onChange={(e) => setAvatarUrl(e.target.value)}
-          className="w-full p-2 rounded bg-black bg-opacity-50 border border-gray-600"
+          className="w-full p-2 rounded-lg bg-white/80 border border-purple-200 focus:border-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-200 text-purple-900"
         />
       </div>
-      
+
       {message && (
-        <p className={message.includes('Error') ? 'text-red-400' : 'text-green-400'}>
+        <p className={message.includes('Error') ? 'text-rose-500 bg-rose-100 p-2 rounded-lg' : 'text-green-600 bg-green-100 p-2 rounded-lg'}>
           {message}
         </p>
       )}
-      
+
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-green-600 hover:bg-green-700 py-2 rounded"
+        className="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded-lg text-white shadow-md transition-all hover:shadow-lg"
       >
         {loading ? 'Updating...' : 'Update Profile'}
       </button>

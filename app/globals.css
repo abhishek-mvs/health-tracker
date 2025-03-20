@@ -69,25 +69,21 @@
 }
 
 :root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 0, 0, 0;
-  --background-end-rgb: 0, 50, 0;
+  --foreground-rgb: 87, 44, 87;
+  --background-start-rgb: 245, 245, 245;
+  --background-end-rgb: 159, 95, 145;
 }
 
+/* This can be removed as we're using a different background approach */
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-    to bottom right,
-    rgb(var(--background-start-rgb)),
-    rgb(var(--background-end-rgb))
-  );
 }
 
 .glass {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border: 1px solid rgba(159, 95, 145, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(87, 44, 87, 0.1);
 }
