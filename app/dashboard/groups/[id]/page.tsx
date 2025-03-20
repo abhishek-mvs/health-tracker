@@ -4,7 +4,10 @@ import GroupDetails from '@/app/components/GroupDetails';
 import GroupMembers from '@/app/components/GroupMembers';
 import WeightGraph from '@/app/components/WeightGraph';
 
-export default async function GroupPage({ params }: { params: { id: string } }) {
+// Use a simpler approach without type annotations
+export default async function GroupDetailsPage(props: any) {
+  const { id } = props.params;
+  
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   
@@ -12,7 +15,7 @@ export default async function GroupPage({ params }: { params: { id: string } }) 
   const { data: group } = await supabase
     .from('groups')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single();
   
   if (!group) {
@@ -23,7 +26,7 @@ export default async function GroupPage({ params }: { params: { id: string } }) 
   const { data: membership } = await supabase
     .from('groupMembers')
     .select('*')
-    .eq('group_id', params.id)
+    .eq('group_id', id)
     .eq('user_id', user?.id)
     .single();
   
@@ -41,7 +44,7 @@ export default async function GroupPage({ params }: { params: { id: string } }) 
   const { data: members } = await supabase
     .from('groupMembers')
     .select('user_id')
-    .eq('group_id', params.id);
+    .eq('group_id', id);
   
   const memberIds = members?.map(member => member.user_id) || [];
   
@@ -78,7 +81,7 @@ export default async function GroupPage({ params }: { params: { id: string } }) 
         <GroupMembers 
           members={profiles || []} 
           isOwner={group.created_by === user?.id}
-          groupId={params.id}
+          groupId={id}
         />
       </div>
     </div>

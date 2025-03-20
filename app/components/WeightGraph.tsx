@@ -66,9 +66,9 @@ export default function WeightGraph({ weightLogs, profiles }: WeightGraphProps) 
     });
 
     // Get all unique dates
-    const allDates = [...new Set(weightLogs.map(log => 
+    const allDates = Array.from(new Set(weightLogs.map(log => 
       new Date(log.created_at).toLocaleDateString()
-    ))].sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+    ))).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
     // Create datasets for each user
     const datasets = Object.keys(userLogs).map((userId, index) => {

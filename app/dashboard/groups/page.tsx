@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import WeightEntryForm from '@/app/components/WeightEntryForm';
 import GroupCard from '@/app/components/GroupCard';
 
@@ -7,11 +8,16 @@ export default async function GroupsPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   
+  // Redirect to login if user is not signed in
+  if (!user) {
+    return redirect('/sign-in?message=Please sign in to access your groups');
+  }
+  
   // Get groups the user is a member of
   const { data: memberGroups } = await supabase
     .from('groupMembers')
     .select('group_id')
-    .eq('user_id', user?.id);
+    .eq('user_id', user.id);
   
   const groupIds = memberGroups?.map(member => member.group_id) || [];
   
@@ -25,7 +31,7 @@ export default async function GroupsPage() {
     <div className="space-y-8">
       <section className="glass p-6">
         <h2 className="text-xl font-bold mb-4">Log Your Weight</h2>
-        <WeightEntryForm userId={user?.id} />
+        <WeightEntryForm userId={user.id} />
       </section>
       
       <section className="glass p-6">

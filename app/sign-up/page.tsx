@@ -4,11 +4,9 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { SubmitButton } from "@/components/submit-button";
 
-export default function SignUp({
-  searchParams,
-}: {
-  searchParams: { message: string };
-}) {
+export default async function SignUp(props: any) {
+  const message = props.searchParams?.message;
+
   const signUp = async (formData: FormData) => {
     "use server";
 
@@ -141,9 +139,9 @@ export default function SignUp({
             </SubmitButton>
           </div>
           
-          {searchParams?.message && (
+          {message && (
             <div className="mt-4 p-4 bg-gray-800 rounded-md text-center">
-              {searchParams.message}
+              {message}
             </div>
           )}
         </form>
