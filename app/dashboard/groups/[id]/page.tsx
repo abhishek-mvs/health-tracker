@@ -31,11 +31,17 @@ export default async function GroupDetailsPage(props: any) {
     .single();
   
   if (!membership) {
-    // User is not a member of this group
+    // User is not a member of this group but can join
     return (
       <div className="glass p-6 text-center">
-        <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
-        <p>You are not a member of this group.</p>
+        <h1 className="text-2xl font-bold mb-4">Join This Group</h1>
+        <p className="mb-4">You are not currently a member of this group.</p>
+        <a 
+          href={`/dashboard/groups/join?groupId=${id}&autoFill=true`}
+          className="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg font-semibold inline-block"
+        >
+          Join Group
+        </a>
       </div>
     );
   }

@@ -75,18 +75,25 @@ export default function WeightGraph({ weightLogs, profiles }: WeightGraphProps) 
       const profile = profiles.find(p => p.id === userId);
       const userName = profile ? profile.full_name : `User ${index + 1}`;
       
-      // Generate a color based on index
-      const hue = (index * 137) % 360; // Golden angle approximation for good distribution
-      const color = `hsl(${hue}, 70%, 60%)`;
+      // Generate a color based on index with improved aesthetics
+      const hue = (index * 137.5) % 360; // Golden angle for better distribution
+      const saturation = 75 + (index % 3) * 5; // Slight variation in saturation
+      const lightness = 55 + (index % 4) * 3; // Slight variation in lightness
+      const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
       
       return {
         label: userName,
         data: userLogs[userId].map(log => log.status),
         borderColor: color,
-        backgroundColor: `${color}33`, // Add transparency
-        tension: 0.3,
+        backgroundColor: `${color}20`, // More subtle transparency
+        borderWidth: 2,
+        tension: 0.4, // Smoother curves
         pointRadius: 4,
-        pointHoverRadius: 6,
+        pointHoverRadius: 7,
+        pointBackgroundColor: color,
+        pointBorderColor: '#fff',
+        pointBorderWidth: 1.5,
+        pointHitRadius: 10, // Easier to hover
       };
     });
 
@@ -102,14 +109,34 @@ export default function WeightGraph({ weightLogs, profiles }: WeightGraphProps) 
     plugins: {
       legend: {
         position: 'top' as const,
+        labels: {
+          padding: 20,
+          usePointStyle: true,
+          pointStyleWidth: 10,
+          boxWidth: 10,
+          font: {
+            size: 12,
+            weight: '600' as const,
+          }
+        }
       },
       title: {
         display: false,
       },
       tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        titleFont: {
+          size: 14,
+          weight: 'bold' as const,
+        },
+        bodyFont: {
+          size: 13,
+        },
+        padding: 12,
+        cornerRadius: 6,
         callbacks: {
           label: function(context: any) {
-            return `${context.dataset.label}: ${context.parsed.y} kg`;
+            return `${context.dataset.label}: ${context.parsed.y.toFixed(1)} kg`;
           }
         }
       }
@@ -119,24 +146,55 @@ export default function WeightGraph({ weightLogs, profiles }: WeightGraphProps) 
         title: {
           display: true,
           text: 'Weight (kg)',
+          font: {
+            size: 14,
+            weight: 'bold' as const,
+          },
+          padding: { bottom: 10 }
         },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.1)',
+        },
+        ticks: {
+          precision: 1,
+        }
       },
       x: {
         title: {
           display: true,
           text: 'Date',
+          font: {
+            size: 14,
+            weight: 'bold' as const,
+          },
+          padding: { top: 10 }
         },
+        grid: {
+          color: 'rgba(255, 255, 255, 0.05)',
+        }
       },
+    },
+    interaction: {
+      mode: 'index' as const,
+      intersect: false,
+    },
+    animation: {
+      duration: 1000,
+      easing: 'easeOutQuart',
     },
   };
 
   if (!weightLogs.length) {
-    return <p>No weight data available for the group members.</p>;
+    return (
+      <div className="flex items-center justify-center h-80 bg-black bg-opacity-20 rounded-lg border border-gray-700">
+        <p className="text-gray-300 text-lg font-medium">No weight data available for the group members.</p>
+      </div>
+    );
   }
 
   return (
-    <div className="h-80">
-      <Line data={chartData} options={options} />
+    <div className="h-80 p-2 bg-black bg-opacity-10 rounded-lg border border-gray-800 shadow-inner">
+      <Line data={chartData} options={options as any} />
     </div>
   );
-} 
+}

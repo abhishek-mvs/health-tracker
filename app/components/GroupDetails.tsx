@@ -96,6 +96,13 @@ export default function GroupDetails({ group, isOwner, memberCount }: GroupDetai
     alert('Group ID copied to clipboard!');
   };
 
+  const copyJoinLink = () => {
+    // Create a magic link that includes the group ID and autoFill parameter
+    const joinLink = `${window.location.origin}/dashboard/groups/join?groupId=${group.id}&autoFill=true`;
+    navigator.clipboard.writeText(joinLink);
+    alert('Invite link copied to clipboard! Share this with others to join your group.');
+  };
+
   return (
     <div className="glass p-6 h-full">
       <h1 className="text-2xl font-bold mb-2">{group.title}</h1>
@@ -103,20 +110,14 @@ export default function GroupDetails({ group, isOwner, memberCount }: GroupDetai
       
       <div className="space-y-4">
         <div>
-          <h3 className="text-lg font-semibold mb-1">Group ID</h3>
-          <div className="flex items-center">
-            <code className="bg-black bg-opacity-50 p-2 rounded flex-1 overflow-x-auto">
-              {group.id}
-            </code>
-            <button 
-              onClick={copyGroupId}
-              className="ml-2 p-2 bg-blue-600 hover:bg-blue-700 rounded"
-              title="Copy Group ID"
-            >
-              📋
-            </button>
-          </div>
-          <p className="text-sm mt-1">Share this ID with others to join your group</p>
+          <h3 className="text-lg font-semibold mb-1">Invite Link</h3>
+          <button 
+            onClick={copyJoinLink}
+            className="w-full bg-green-600 hover:bg-green-700 py-2 rounded flex items-center justify-center"
+          >
+            <span className="mr-2">Copy Invite Link</span> 🔗
+          </button>
+          <p className="text-sm mt-1">Share this link for one-click joining</p>
         </div>
         
         <div>

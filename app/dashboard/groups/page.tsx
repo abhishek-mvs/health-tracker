@@ -18,15 +18,12 @@ export default async function GroupsPage() {
     .from('groupMembers')
     .select('group_id')
     .eq('user_id', user.id);
-  console.log("memberGroups",  memberGroups);
   const groupIds = memberGroups?.map(member => member.group_id) || [];
-  console.log("groupIds", groupIds);
   // Get group details
   const { data: groups } = await supabase
     .from('groups')
     .select('*, groupMembers(count)')
     .in('id', groupIds);
-  console.log("groups", groups);
   return (
     <div className="space-y-8">
       <section className="glass p-6">

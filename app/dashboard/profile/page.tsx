@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import ProfileForm from '@/app/components/ProfileForm';
+import WeightLogsTable from '@/app/components/WeightLogsTable';
 import Image from 'next/image';
 
 export default async function ProfilePage() {
@@ -69,31 +70,7 @@ export default async function ProfilePage() {
       
       <div className="md:col-span-2 glass p-6">
         <h2 className="text-xl font-bold mb-4">Recent Weight Logs</h2>
-        
-        {weightLogs && weightLogs.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-700">
-                  <th className="text-left py-2">Date</th>
-                  <th className="text-right py-2">Weight (kg)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {weightLogs.map(log => (
-                  <tr key={log.id} className="border-b border-gray-800">
-                    <td className="py-2">
-                      {new Date(log.created_at).toLocaleDateString()}
-                    </td>
-                    <td className="text-right py-2">{log.status}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <p>No weight logs found. Start tracking your weight!</p>
-        )}
+        <WeightLogsTable weightLogs={weightLogs || []} />
       </div>
     </div>
   );

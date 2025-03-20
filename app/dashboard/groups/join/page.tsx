@@ -1,14 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function JoinGroupPage() {
   const [groupId, setGroupId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Read query parameters and auto-fill the group ID
+  useEffect(() => {
+    const groupIdParam = searchParams.get('groupId');
+    const autoFill = searchParams.get('autoFill');
+    
+    if (groupIdParam && autoFill === 'true') {
+      setGroupId(groupIdParam);
+      // Optionally auto-submit the form
+      // if (autoFill === 'true') {
+      //   handleSubmit(new Event('submit') as any);
+      // }
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
