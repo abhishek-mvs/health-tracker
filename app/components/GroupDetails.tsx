@@ -58,14 +58,23 @@ export default function GroupDetails({ group, isOwner, memberCount }: GroupDetai
 
     try {
       // Delete group members first
+      console.log("deleting group members", group.id);
+      const { data: members } = await supabase
+        .from('groupMembers')
+        .select('*')
+        .eq('group_id', group.id);
+      console.log("members", members);
+
+  
       const { error: membersError } = await supabase
         .from('groupMembers')
         .delete()
         .eq('group_id', group.id);
-
+      console.log("membersError", membersError);
       if (membersError) throw membersError;
-
+      
       // Then delete the group
+      console.log("deleting group", group.id);
       const { error: groupError } = await supabase
         .from('groups')
         .delete()

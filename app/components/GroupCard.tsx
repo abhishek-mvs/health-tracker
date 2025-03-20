@@ -8,12 +8,12 @@ type GroupCardProps = {
     title: string;
     description: string | null;
     created_at: string;
-    groupMembers: { count: number } | null;
+    groupMembers: { count: number }[] | null;
   };
 };
 
 export default function GroupCard({ group }: GroupCardProps) {
-  const memberCount = group.groupMembers?.count || 0;
+  const memberCount = group.groupMembers?.[0]?.count || 0;
   const createdDate = new Date(group.created_at).toLocaleDateString();
   
   return (
