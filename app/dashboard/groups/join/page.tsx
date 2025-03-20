@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 
 export default function JoinGroupPage() {
@@ -16,6 +16,7 @@ export default function JoinGroupPage() {
     setError('');
 
     try {
+      const supabase = createClient();
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) throw new Error('User not authenticated');
 
