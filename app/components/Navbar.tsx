@@ -3,53 +3,18 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from "@/utils/supabase/client";
-import { useEffect, useState } from 'react';
 import { ChartSplineIcon } from '@/components/ui/chart-spline';
+import { useAuth } from '@/app/components/AuthProvider'; 
 
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function checkAuth() {
-      try {
-        setIsLoading(true);
-        const { data } = await supabase.auth.getSession();
-        setIsLoggedIn(!!data.session);
-      } catch (error) {
-        console.error('Auth check error:', error);
-        setIsLoggedIn(false);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    checkAuth();
-
-    // Set up auth state change listener
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setIsLoggedIn(!!session);
-        setUserEmail(session?.user?.email || null);
-      }
-    );
-
-    return () => {
-      // Clean up subscription when component unmounts
-      if (authListener && authListener.subscription) {
-        authListener.subscription.unsubscribe();
-      }
-    };
-  }, [supabase.auth]);
+  const { isLoggedIn, isLoading, userEmail } = useAuth();
 
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      setIsLoggedIn(false);
       router.push('/');
     } catch (error) {
       console.error('Logout error:', error);
