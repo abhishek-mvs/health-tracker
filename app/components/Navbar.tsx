@@ -85,7 +85,7 @@ export default function Navbar() {
                 href="/dashboard/profile"
                 className={`${pathname.includes('/dashboard/profile') ? 'text-rose-500 font-bold' : 'text-purple-800 hover:text-rose-400'} transition-colors`}
               >
-                {userEmail || 'Profile'}
+                Profile
               </Link>
               <button
                 onClick={handleLogout}

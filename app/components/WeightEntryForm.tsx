@@ -1,17 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createClient } from "@/utils/supabase/client";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
-export default function WeightEntryForm({ userId }: { userId: string }) {
+export default function WeightEntryForm({ userId, onWeightLogged }: { 
+  userId: string;
+  onWeightLogged?: () => void;
+}) {
   const [weight, setWeight] = useState('');
   const [date, setDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const supabase = createClient();
+  const router = useRouter();
 
   // Add custom styles for the DatePicker
   useEffect(() => {
@@ -84,6 +88,14 @@ export default function WeightEntryForm({ userId }: { userId: string }) {
 
       setMessage('Weight logged successfully!');
       setWeight('');
+      
+      // Call the callback function if provided
+      if (onWeightLogged) {
+        onWeightLogged();
+      }
+      
+      // Refresh the page to update the table
+      router.refresh();
     } catch (error) {
       console.error('Error logging weight:', error);
       setMessage('Failed to log weight. Please try again.');
