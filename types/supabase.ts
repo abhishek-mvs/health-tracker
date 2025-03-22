@@ -1,4 +1,4 @@
-import { Database } from '@/supabase';
+import { Database as SupabaseDatabase } from '@/supabase';
 
 export type Json =
   | string
@@ -8,10 +8,10 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export type WeightLog = Database['public']['Tables']['userHealthLog']['Row'];
-export type Profile = Database['public']['Tables']['profile']['Row'];
-export type Group = Database['public']['Tables']['groups']['Row'];
-export type GroupMember = Database['public']['Tables']['groupMembers']['Row'];
+export type WeightLog = SupabaseDatabase['public']['Tables']['userHealthLog']['Row'];
+export type Profile = SupabaseDatabase['public']['Tables']['profile']['Row'];
+export type Group = SupabaseDatabase['public']['Tables']['groups']['Row'];
+export type GroupMember = SupabaseDatabase['public']['Tables']['groupMembers']['Row'];
 
 // Create a SupabaseContext type
 export type SupabaseContextType = {

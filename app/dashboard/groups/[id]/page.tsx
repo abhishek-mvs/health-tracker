@@ -4,6 +4,7 @@ import GroupDetails from '@/app/components/GroupDetails';
 import GroupMembers from '@/app/components/GroupMembers';
 import WeightGraph from '@/app/components/WeightGraph';
 import StepsGraph from '../../../components/StepsGraph';
+import Graphs from '@/app/components/Graphs';
 
 // Use a simpler approach without type annotations
 export default async function GroupDetailsPage(props: any) {
@@ -70,9 +71,6 @@ export default async function GroupDetailsPage(props: any) {
   console.log("profiles", profiles);
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">{group?.title}</h1>
-      <p className="text-gray-600 mb-6">{group?.description}</p>
-      
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-1">
           <GroupDetails
@@ -83,17 +81,14 @@ export default async function GroupDetailsPage(props: any) {
         </div>
 
         <div className="md:col-span-2 bg-white/90 shadow-lg rounded-xl p-6 backdrop-blur-sm">
-          <h2 className="text-xl font-bold mb-4 text-purple-900">Weight Progress</h2>
-          <WeightGraph weightLogs={weightLogs || []} profiles={profiles || []} />
-        </div>
-
-        <div className="md:col-span-3 bg-white/90 shadow-lg rounded-xl p-6 backdrop-blur-sm">
-          <h2 className="text-xl font-bold mb-4 text-purple-900">Steps Progress</h2>
-          <StepsGraph logs={weightLogs || []} profiles={profiles || []} />
+          <Graphs 
+            weightLogs={weightLogs || []} 
+            profiles={profiles || []} 
+          />
         </div>
       </div>
 
-      <div className="md:col-span-3 bg-white/90 shadow-lg rounded-xl p-6 backdrop-blur-sm">
+      <div className="md:col-span-3 bg-white/90 shadow-lg rounded-xl p-6 backdrop-blur-sm mt-6">
         <h2 className="text-xl font-bold mb-4 text-purple-900">Group Members</h2>
         <GroupMembers
           members={profiles || []}
