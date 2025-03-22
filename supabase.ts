@@ -120,30 +120,33 @@ export type Database = {
         }
         Relationships: []
       }
-      userWeightLog: {
+      userHealthLog: {
         Row: {
           created_at: string
           id: string
           log_date: string | null
-          status: number
+          steps: number | null
           updated_at: string
           user_id: string
+          weight: number
         }
         Insert: {
           created_at?: string
           id?: string
           log_date?: string | null
-          status: number
+          steps?: number | null
           updated_at?: string
           user_id: string
+          weight: number
         }
         Update: {
           created_at?: string
           id?: string
           log_date?: string | null
-          status?: number
+          steps?: number | null
           updated_at?: string
           user_id?: string
+          weight?: number
         }
         Relationships: []
       }

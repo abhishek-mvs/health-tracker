@@ -8,7 +8,7 @@ import { XIcon } from '@/components/ui/x';
 type WeightLog = {
   id: string;
   user_id: string;
-  status: number;
+  weight: number;
   log_date: string;
 };
 
@@ -28,7 +28,7 @@ export default function WeightLogsTable({ weightLogs }: { weightLogs: WeightLog[
 
     try {
       const { error } = await supabase
-        .from('userWeightLog')
+        .from('userHealthLog')
         .delete()
         .eq('id', logId);
 
@@ -78,7 +78,7 @@ export default function WeightLogsTable({ weightLogs }: { weightLogs: WeightLog[
                   <td className="py-2 text-purple-800">
                     {new Date(log.log_date).toLocaleDateString()}
                   </td>
-                  <td className="text-right py-2 text-purple-800">{log.status}</td>
+                  <td className="text-right py-2 text-purple-800">{log.weight}</td>
                 </tr>
               ))}
             </tbody>

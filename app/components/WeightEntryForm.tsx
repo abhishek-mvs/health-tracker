@@ -75,10 +75,10 @@ export default function WeightEntryForm({ userId, onWeightLogged }: {
 
     try {
       const { error } = await supabase
-        .from('userWeightLog')
+        .from('userHealthLog')
         .insert({
           user_id: userId,
-          status: parseFloat(weight),
+          weight: parseFloat(weight),
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           log_date: date.toISOString(),

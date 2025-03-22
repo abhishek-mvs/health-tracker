@@ -56,7 +56,7 @@ export default async function GroupDetailsPage(props: any) {
 
   // Get weight logs for all members
   const { data: weightLogs } = await supabase
-    .from('userWeightLog')
+    .from('userHealthLog')
     .select('*')
     .in('user_id', memberIds)
     .order('log_date', { ascending: true });

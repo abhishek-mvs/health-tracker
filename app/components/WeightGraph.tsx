@@ -29,7 +29,7 @@ ChartJS.register(
 type WeightLog = {
   id: string;
   user_id: string;
-  status: number;
+  weight: number;
   log_date: string;
 };
 
@@ -86,7 +86,7 @@ export default function WeightGraph({ weightLogs, profiles }: WeightGraphProps) 
           const dateStr = log.log_date.split('T')[0];
           return {
             x: new Date(dateStr),
-            y: log.status,
+            y: log.weight,  
             originalDate: log.log_date // Store original date for tooltip
           };
         }),
