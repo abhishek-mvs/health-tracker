@@ -3,6 +3,7 @@
 import { createClient } from "@/utils/supabase/client";
 import { useRouter, usePathname } from "next/navigation";
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { SupabaseProvider } from '@/contexts/SupabaseContext';
 
 type AuthContextType = {
   isLoggedIn: boolean;
@@ -61,8 +62,10 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   }, [pathname]);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, isLoading, userEmail, refreshAuthState }}>
-      {children}
-    </AuthContext.Provider>
+    <SupabaseProvider>
+      <AuthContext.Provider value={{ isLoggedIn, isLoading, userEmail, refreshAuthState }}>
+        {children}
+      </AuthContext.Provider>
+    </SupabaseProvider>
   );
 } 

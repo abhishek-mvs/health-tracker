@@ -37,15 +37,11 @@ export default async function GroupsPage() {
 
   return (
     <div className="flex gap-4 h-full">
-      <div className="flex flex-col gap-4 w-[350px]">
-        <section className="bg-white/90 shadow-lg rounded-xl backdrop-blur-sm p-6">
-          <h2 className="text-xl font-bold mb-4 text-purple-900">Log Your Weight</h2>
+      <div className="flex flex-col gap-4 w-[500px]">
+        
           <WeightEntryForm userId={user.id} />
-        </section>
-        <div className="md:col-span-2 bg-white/90 shadow-lg rounded-xl p-6 backdrop-blur-sm">
-          <h2 className="text-xl font-bold mb-4 text-purple-900">Recent Weight Logs</h2>
           <WeightLogsTable weightLogs={weightLogs || []} />
-        </div>
+        
       </div>
 
       <section className="bg-white/90 shadow-lg rounded-xl backdrop-blur-sm p-6">

@@ -1,21 +1,27 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from "@/utils/supabase/client";
+import { useRouter } from 'next/navigation';
+import { useSupabase } from '@/contexts/SupabaseContext';
+import { toast } from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useRouter } from 'next/navigation';
 
 export default function WeightEntryForm({ userId, onWeightLogged }: { 
   userId: string;
   onWeightLogged?: () => void;
 }) {
-  const [weight, setWeight] = useState('');
-  const [date, setDate] = useState(new Date());
+  const [weight, setWeight] = useState<number | ''>('');
+  const [steps, setSteps] = useState<number | ''>('');
+  const [date, setDate] = useState(() => {
+    // Set to current date at 00:00 GMT
+    const today = new Date();
+    return new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0));
+  });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const supabase = createClient();
   const router = useRouter();
+  const { supabase, session } = useSupabase();
 
   // Add custom styles for the DatePicker
   useEffect(() => {
@@ -70,80 +76,112 @@ export default function WeightEntryForm({ userId, onWeightLogged }: {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (weight === '') {
+      toast.error('Please enter your weight');
+      return;
+    }
+    
     setLoading(true);
-    setMessage('');
-
+    
     try {
-      const { error } = await supabase
-        .from('userHealthLog')
-        .insert({
-          user_id: userId,
-          weight: parseFloat(weight),
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          log_date: date.toISOString(),
-        });
-
+      const { error } = await supabase.from('userHealthLog').insert({
+        user_id: session?.user.id || userId,
+        weight: weight as number,
+        steps: steps === '' ? null : steps as number,
+        log_date: date.toISOString(),
+      });
+      
       if (error) throw error;
-
-      setMessage('Weight logged successfully!');
+      
+      toast.success('Weight and steps logged successfully!');
       setWeight('');
-      
-      // Call the callback function if provided
-      if (onWeightLogged) {
-        onWeightLogged();
-      }
-      
-      // Refresh the page to update the table
+      setSteps('');
+      onWeightLogged?.();
       router.refresh();
     } catch (error) {
       console.error('Error logging weight:', error);
-      setMessage('Failed to log weight. Please try again.');
+      toast.error('Failed to log weight and steps');
     } finally {
       setLoading(false);
     }
   };
 
+  const handleDateChange = (selectedDate: Date | null) => {
+    if (selectedDate) {
+      // Ensure the date is set to 00:00 GMT
+      const normalizedDate = new Date(Date.UTC(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        selectedDate.getDate(),
+        0, 0, 0
+      ));
+      setDate(normalizedDate);
+    } else {
+      // If null is passed, set to today at 00:00 GMT
+      const today = new Date();
+      setDate(new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0)));
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block mb-2 text-purple-800">Weight (kg)</label>
-        <input
-          type="number"
-          step="0.1"
-          value={weight}
-          onChange={(e) => setWeight(e.target.value)}
-          required
-          className="w-full p-2 rounded-md bg-purple-50 border border-purple-200 focus:border-purple-500 focus:outline-none text-purple-900"
-        />
-      </div>
-
-      <div className="relative">
-        <label className="block mb-2 text-purple-800">Date</label>
-        <DatePicker
-          selected={date}
-          onChange={(date) => setDate(date || new Date())}
-          className="w-full p-2 rounded-md bg-purple-50 border border-purple-200 focus:border-purple-500 focus:outline-none text-purple-900"
-          maxDate={new Date()}
-          popperClassName="react-datepicker-popper"
-          popperPlacement="bottom-start"
-          portalId="datepicker-portal"
-        />
-      </div>
-
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded-lg text-white transition-all shadow-md hover:shadow-lg"
-      >
-        {loading ? 'Logging...' : 'Log Weight'}
-      </button>
-
-      {message && (
-        <p className={`p-2 rounded-md ${message.includes('Failed') ? 'bg-rose-100 text-rose-600' : 'bg-purple-100 text-purple-600'}`}>
-          {message}
-        </p>
-      )}
-    </form>
+    <div className="bg-white p-6 rounded-lg shadow-md">
+      <h2 className="text-xl font-semibold mb-4">Log Health Data</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
+            Date
+          </label>
+          <DatePicker
+            selected={date}
+            onChange={handleDateChange}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            maxDate={new Date()}
+            dateFormat="MMMM d, yyyy"
+          />
+        </div>
+        
+        <div className="mb-4">
+          <label htmlFor="weight" className="block text-sm font-medium text-gray-700 mb-1">
+            Weight (kg)
+          </label>
+          <input
+            id="weight"
+            type="number"
+            min="1"
+            step="0.1"
+            value={weight}
+            onChange={(e) => setWeight(e.target.value ? parseFloat(e.target.value) : '')}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            placeholder="Enter your weight"
+          />
+        </div>
+        
+        <div className="mb-4">
+          <label htmlFor="steps" className="block text-sm font-medium text-gray-700 mb-1">
+            Steps (optional)
+          </label>
+          <input
+            id="steps"
+            type="number"
+            min="0"
+            value={steps}
+            onChange={(e) => setSteps(e.target.value ? parseInt(e.target.value) : '')}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            placeholder="Enter your steps"
+          />
+        </div>
+        
+        <button
+          type="submit"
+          disabled={loading || weight === ''}
+          className={`w-full p-2 rounded-md text-white ${
+            loading || weight === '' ? 'bg-blue-300' : 'bg-blue-600 hover:bg-blue-700'
+          }`}
+        >
+          {loading ? 'Logging...' : 'Log Health Data'}
+        </button>
+      </form>
+    </div>
   );
 } 

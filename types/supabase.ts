@@ -1,3 +1,5 @@
+import { Database } from '@/supabase';
+
 export type Json =
   | string
   | number
@@ -5,6 +7,17 @@ export type Json =
   | null
   | { [key: string]: Json | undefined }
   | Json[]
+
+export type WeightLog = Database['public']['Tables']['userHealthLog']['Row'];
+export type Profile = Database['public']['Tables']['profile']['Row'];
+export type Group = Database['public']['Tables']['groups']['Row'];
+export type GroupMember = Database['public']['Tables']['groupMembers']['Row'];
+
+// Create a SupabaseContext type
+export type SupabaseContextType = {
+  supabase: any;
+  session: any;
+};
 
 export type Database = {
   graphql_public: {
@@ -124,23 +137,29 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          weight : number
+          log_date: string | null
+          steps: number | null
           updated_at: string
           user_id: string
+          weight: number
         }
         Insert: {
           created_at?: string
           id?: string
-          weight: number
+          log_date?: string | null
+          steps?: number | null
           updated_at?: string
           user_id: string
+          weight: number
         }
         Update: {
           created_at?: string
           id?: string
-          weight?: number
+          log_date?: string | null
+          steps?: number | null
           updated_at?: string
           user_id?: string
+          weight?: number
         }
         Relationships: []
       }
