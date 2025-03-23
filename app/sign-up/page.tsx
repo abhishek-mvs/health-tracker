@@ -18,7 +18,7 @@ export default async function SignUp(props: any) {
     const weight = formData.get("weight") as string;
 
     const supabase = await createClient();
-
+      
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -26,11 +26,16 @@ export default async function SignUp(props: any) {
         emailRedirectTo: `${origin}/auth/callback`,
       },
     });
-
+   
     if (error) {
       return redirect("/sign-up?message=Could not authenticate user");
     }
 
+    if (data.user && data.user.identities && data.user.identities.length === 0) {
+      console.log("User already exists");
+      return redirect("/sign-in?message=Email already exists");
+    } 
+  
     // Create user profile if sign up was successful
     if (data.user) {
       const { error: profileError } = await supabase
