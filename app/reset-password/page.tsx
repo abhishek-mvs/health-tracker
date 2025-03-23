@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { SubmitButton } from "@/components/submit-button";
 
-export default function ResetPassword({ searchParams }: { searchParams: { message?: string } }) {
-  const message = searchParams?.message;
+export default async function ResetPassword(props: any) {
+  const message = props.searchParams?.message;
 
   const updatePassword = async (formData: FormData) => {
     "use server";
