@@ -58,6 +58,11 @@ export default async function SignIn(props: any) {
               placeholder="••••••••"
               required
             />
+            <div className="flex justify-end">
+              <Link href="/forgot-password" className="text-sm text-purple-600 hover:text-purple-800">
+                Forgot password?
+              </Link>
+            </div>
           </div>
 
           <div className="pt-4 space-y-3">
