@@ -26,29 +26,6 @@ export default async function SignIn(props: any) {
     return redirect("/dashboard/groups");
   };
 
-  const signUp = async (formData: FormData) => {
-    "use server";
-
-    const origin = (await headers()).get("origin");
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const supabase = await createClient();
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${origin}/auth/callback`,
-      },
-    });
-
-    if (error) {
-      return redirect("/sign-in?message=Could not authenticate user");
-    }
-
-    return redirect("/sign-in?message=Check email to continue sign in process");
-  };
-
   return (
     <div className="min-h-[calc(100vh-160px)] flex flex-col items-center justify-center py-8">
       <div className="bg-white/90 shadow-lg rounded-xl p-8 w-full max-w-md backdrop-blur-sm">
@@ -92,13 +69,12 @@ export default async function SignIn(props: any) {
               Sign In
             </SubmitButton>
 
-            <SubmitButton
-              formAction={signUp}
-              className="w-full bg-rose-400 hover:bg-rose-500 rounded-md px-4 py-3 text-white font-medium transition-colors shadow-md"
-              pendingText="Signing Up..."
+            <Link
+              href="/sign-up"
+              className="w-full bg-rose-400 hover:bg-rose-500 rounded-md px-4 py-3 text-white font-medium transition-colors shadow-md text-center block"
             >
               Create Account
-            </SubmitButton>
+            </Link>
           </div>
 
           {message && (
