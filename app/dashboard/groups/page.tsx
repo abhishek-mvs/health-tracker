@@ -36,18 +36,16 @@ export default async function GroupsPage() {
 
 
   return (
-    <div className="flex gap-4 h-full">
-      <div className="flex flex-col gap-4 w-[500px]">
-        
-          <WeightEntryForm userId={user.id} />
-          <WeightLogsTable weightLogs={weightLogs || []} />
-        
+    <div className="flex flex-col lg:flex-row gap-4 h-full">
+      <div className="flex flex-col gap-4 w-full lg:w-[400px]">
+        <WeightEntryForm userId={user.id} />
+        <WeightLogsTable weightLogs={weightLogs || []} />
       </div>
 
-      <section className="bg-white/90 shadow-lg rounded-xl backdrop-blur-sm p-6">
-        <div className="flex justify-between gap-4">
+      <section className="bg-white/90 shadow-lg rounded-xl backdrop-blur-sm p-6 w-full">
+        <div className="flex flex-col sm:flex-row justify-between gap-4">
           <h2 className="text-xl font-bold text-purple-900">Groups</h2>
-          <div className="flex flex-wrap gap-3 mb-6">
+          <div className="flex flex-wrap gap-3">
             <Link
               href="/dashboard/groups/join"
               className="bg-rose-400 hover:bg-rose-500 text-white px-4 py-2 rounded-lg shadow-md transition-all hover:shadow-lg"
@@ -57,10 +55,10 @@ export default async function GroupsPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
           {/* Create New Group Card */}
-          <a href="/dashboard/groups/create" className="bg-transparent backdrop-blur-sm h-full flex flex-col items-center justify-center text-center border-2 border-dashed border-purple-400 hover:border-purple-600 transition-all group rounded-xl p-6 shadow-sm hover:shadow-md">
-            <div className="w-20 h-20 rounded-full bg-purple-200 flex items-center justify-center mb-4 group-hover:bg-purple-300 transition-all shadow-inner">
+          <a href="/dashboard/groups/create" className="group bg-white border-2 border-dashed border-purple-300 p-2 rounded-lg shadow-sm hover:shadow-md transition-all hover:border-purple-400 flex flex-col items-center text-center">
+            <div className="w-12 h-12 sm:w-20 sm:h-20 rounded-full bg-purple-200 flex items-center justify-center mb-4 group-hover:bg-purple-300 transition-all shadow-inner">
               <span className="text-4xl text-purple-700 font-light">+</span>
             </div>
             <h3 className="text-xl font-semibold text-purple-900 mb-2">Create New Group</h3>

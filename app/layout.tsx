@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} min-h-screen text-purple-900 overflow-x-hidden bg-gray-100`}>
+      <body className={`${inter.className} min-h-screen text-purple-900 w-screen overflow-x-hidden bg-gray-100`}>
         <SupabaseProvider>
           <AuthProvider>
             {/* Background Elements */}
@@ -39,9 +39,9 @@ export default function RootLayout({
             <div id="datepicker-portal" className="z-50"></div>
 
             {/* Content */}
-            <div className="relative z-10 min-h-screen">
+            <div className="relative z-10 p-2">
               <Providers>
-                <div className="container mx-auto px-4 py-4">
+                <div className="w-full max-w-[100vw] overflow-x-hidden">
                   <Navbar />
                   {children}
                 </div>
