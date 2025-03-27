@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} min-h-screen text-purple-900 w-screen overflow-x-hidden bg-gray-100`}>
+      <body className={`${inter.className} min-h-screen text-purple-900 w-screen min-w-[300px] overflow-x-hidden bg-gray-100`}>
         <SupabaseProvider>
           <AuthProvider>
             {/* Background Elements */}
@@ -41,7 +41,7 @@ export default function RootLayout({
             {/* Content */}
             <div className="relative z-10 p-2">
               <Providers>
-                <div className="w-full max-w-[100vw] overflow-x-hidden">
+                <div className="w-full overflow-x-hidden">
                   <Navbar />
                   {children}
                 </div>
